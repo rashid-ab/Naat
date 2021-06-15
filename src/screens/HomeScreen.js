@@ -6,6 +6,7 @@ import {
   View,
   Image,
   Dimensions,
+  Platform,
   ImageBackground,
   FlatList
 } from "react-native";
@@ -19,8 +20,8 @@ import { scrollInterpolator, animatedStyles } from '../components/utils';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
-const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
-
+const ITEM_HEIGHT =Dimensions.get('window').width>Dimensions.get('window').height? Math.round(ITEM_WIDTH * 3 / 2):Math.round(ITEM_WIDTH * 3 / 4);
+import Player from '../components/player';
 class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -40,6 +41,7 @@ class HomeScreen extends React.Component {
           ]
     };
   }
+  
   _renderItem = ({item, index}) => {
     return (
       <TouchableOpacity>
@@ -57,7 +59,7 @@ class HomeScreen extends React.Component {
   }
   popular_videos = ({item}) => {
       return (
-        <TouchableOpacity style={{ borderRadius:10,marginHorizontal:10 }}>
+        <TouchableOpacity style={{ borderRadius:10,marginHorizontal:10 }} onPress={()=>{this.props.navigation.navigate('Player',{id:item.id})}}>
           <Image source={{ uri:item.image }} style={{ width:100,height:100,borderRadius:10 }} />
           <Text style={{ color:'white',fontSize:14 }}>{item.title}</Text>
         </TouchableOpacity>
@@ -78,6 +80,7 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
+        
         <View style={{ flexDirection:'row',alignItems:'center',justifyContent:'space-between',flex:1,backgroundColor:'black',height:120,paddingTop:20,paddingLeft:20 }}>
           <View style={{ flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
             <Image source={ require('../assets/logo.png') } style={{width:45,height:45,marginHorizontal:10}}/>
@@ -166,8 +169,8 @@ const styles = StyleSheet.create({
     marginTop: 50
   },
   itemContainer: {
-    width: ITEM_WIDTH,
-    height: ITEM_HEIGHT,
+    width: "100%",
+    height: 200,
     // alignItems: 'center',
     // justifyContent: 'center',
     backgroundColor: 'dodgerblue'

@@ -1,7 +1,5 @@
 import * as React from 'react';
-import {StatusBar} from 'react-native';
-import { Provider } from 'react-redux'
-import { store } from './src/redux/index'
+import {StatusBar,View} from 'react-native';
 import APP from './src/routes/index'
 import SplashScreen from 'react-native-splash-screen';
 class App extends React.Component {
@@ -14,10 +12,10 @@ class App extends React.Component {
   }
   render() {
     return (
-      <Provider store={store}>
+      <View style={{ flex:1 }}>
         <StatusBar barStyle = "white" hidden = {false} backgroundColor = "#161617" translucent = {true}/>
         <APP />
-      </Provider>
+      </View>
     );
   }
 }

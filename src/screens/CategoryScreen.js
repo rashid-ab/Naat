@@ -51,7 +51,7 @@ class HomeScreen extends React.Component {
           <View style={{ justifyContent:'center',alignItems:'center',backgroundColor:'rgba(0,0,0,.6)',zIndex:1000,bottom:40,width:150,height:30,borderBottomLeftRadius:20,borderBottomRightRadius:20 }}>
             <Text style={{ fontSize:14,color:'white' }}>{ item.title }</Text>
           </View>
-        </TouchableOpacity>
+      </TouchableOpacity>
     );
   }
   onRadioPressed() {
