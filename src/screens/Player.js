@@ -1,14 +1,14 @@
 import React from "react";
 import {
-  ScrollView,
+  
   StyleSheet,
   Text,
   View,
   Image,
   ImageBackground,
-  FlatList
+  
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity,FlatList,ScrollView } from "react-native-gesture-handler";
 import Carousel from 'react-native-snap-carousel';
 import {
   AppStyles,
@@ -17,40 +17,46 @@ import { scrollInterpolator, animatedStyles } from '../components/utils';
 import Line from '../components/Line';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import axios from 'axios';
 class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
         videoId:'84WIaK3bl_s',
         play:true,
-        data:[
-            {image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem',duration:'19:20'},
-            {image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem',duration:'19:20'},
-            {image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem',duration:'19:20'},
-            {image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem',duration:'19:20'},
-            {image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem',duration:'19:20'},
-            {image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem',duration:'19:20'},
-            {image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem',duration:'19:20'},
-            {image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem',duration:'19:20'},
-            {image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem',duration:'19:20'},
-          ]
+        data:[],
+        page_no:1
+
     };
   }
-  onpress =async () => {
-    await this.setState({videoId:'v7K4vGYL9zI',paly:true})
+  onpress =async (youtubeID) => {
+    await this.setState({videoId:youtubeID,paly:true})
     this.scrollListReftop.scrollTo({x: 0, y: 0, animated: true})
     this.render();
   }
+  componentDidMount = () => {
+    this.setState({videoId:this.props.navigation.state.params.data.youtubeID})
+    // console.log('http://Sh.tasmiasolutions.com/api/mobile/get_videos?category_id='+this.props.navigation.state.params.data.category_id+'&page_no='+this.state.page_no+'&items_per_page='+this.state.items_per_page)
+    axios({
+      method: 'GET',
+      url: 'http://Sh.tasmiasolutions.com/api/mobile/get_videos?page_no='+this.state.page_no+'&category_id='+this.props.navigation.state.params.data.category_id
+      // responseType: 'stream'
+    })
+      .then(({ data: response }) => {
+        console.log(response.data)
+        this.setState({data:response.data,page_no:this.state.page_no==response.meta.total_pages?0:this.state.page_no+1})
+    });
+  }
   popular_videos = ({item}) => {
     return (
-      <TouchableOpacity style={{ borderRadius:10,marginHorizontal:10,marginVertical:10 }} onPress={()=>{this.onpress()}}>
+      <TouchableOpacity style={{ borderRadius:10,marginHorizontal:10,marginVertical:10 }} onPress={()=>{this.onpress(item.youtubeID)}}>
         <View style={{ flex:1}}>
           <View style={{ flex:.5 }}>
-              <Image source={{ uri:item.image }} style={{ width:wp("100%"),height:hp('30%') }} />
+              <Image source={{ uri:item.imageURL }} style={{ width:wp("100%"),height:hp('30%') }} />
           </View>
           <View style={{ }}>
-              <Text style={{ color:'white',fontSize:22 }}>Dam Hama Dam FT. Asif Ali Dadiyaan</Text>
-              <Text style={{ color:'#4D4639',fontSize:16 }}>2.8M Views 3 Months Ago</Text>
+              <Text style={{ color:'white',fontSize:22 }}>{item.title}</Text>
+              {/* <Text style={{ color:'#4D4639',fontSize:16 }}>2.8M Views 3 Months Ago</Text> */}
           </View>
         </View>
       </TouchableOpacity>
@@ -67,13 +73,22 @@ playVideo = () =>{
         />
     );
 }
-  componentDidMount() {
-   
-  }
-
-  render() {
-    return (
-        <ScrollView ref={(ref) => { this.scrollListReftop = ref; }} style={styles.container}>
+LoadMoreRandomData = () => {
+  if(this.state.page_no>0){
+  axios({
+    method: 'get',
+    url: 'http://Sh.tasmiasolutions.com/api/mobile/get_videos?page_no='+this.state.page_no+'&category_id='+this.props.navigation.state.params.data.category_id
+    // responseType: 'stream'
+  })
+    .then(({ data: response }) => {
+      // console.log(response.data)
+      this.setState({data:this.state.data.concat(response.data),isLoading:false,page_no:this.state.page_no==response.meta.total_pages?0:this.state.page_no+1})
+  });
+}
+}
+FlatlistHeader = () => {
+return(
+            <View>
             <View style={{ flexDirection:'row',alignItems:'center',justifyContent:'space-between',flex:1,backgroundColor:'black',height:120,paddingTop:20,paddingLeft:20 }}>
                 <View style={{ flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
                     <Image source={ require('../assets/logo.png') } style={{width:45,height:45,marginHorizontal:10}}/>
@@ -84,21 +99,34 @@ playVideo = () =>{
                 {this.playVideo()}
             </View>
             <View style={{ paddingLeft:10,marginTop:-10 }}>
-                <Text style={{ color:'white',fontSize:22 }}>Dam Hama Dam FT. Asif Ali Dadiyaan</Text>
-                <Text style={{ color:'#4D4639',fontSize:16 }}>2.8M Views 3 Months Ago</Text>
+              <Text style={{ color:'white',fontSize:22 }}>{this.props.navigation.state.params.data.title}</Text>
+                {/* <Text style={{ color:'#4D4639',fontSize:16 }}>2.8M Views 3 Months Ago</Text> */}
             </View>
             <View style={{ marginHorizontal:10,marginVertical:10 }}>
                 <Line />
             </View>
-            <View style={{  }}>
+            </View>
+);
+}
+  render() {
+    return (
+        // <ScrollView ref={(ref) => { this.scrollListReftop = ref; }} style={styles.container}>
+            
+            <View style={styles.container}>
                 <FlatList
+                nestedScrollEnabled 
                 showsVerticalScrollIndicator={false}
                 data={this.state.data}
                 renderItem={(item) => this.popular_videos(item)}
                 keyExtractor={(item, index) => index}
+                ListHeaderComponent={() => {
+                  return this.FlatlistHeader()
+                }}
+                onEndReached={this.LoadMoreRandomData}
+                onEndReachedThreadhold={0.5}
                 />
             </View>
-        </ScrollView>
+        // </ScrollView>
     );
   }
 }
@@ -122,3 +150,6 @@ const styles = StyleSheet.create({
   }
 });
 export default HomeScreen;
+
+
+
