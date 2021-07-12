@@ -18,6 +18,8 @@ import Line from '../components/Line';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import axios from 'axios';
+import ViewMoreText from 'react-native-view-more-text';
+import { Icon } from 'react-native-elements'
 class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +36,16 @@ class HomeScreen extends React.Component {
     this.scrollListReftop.scrollTo({x: 0, y: 0, animated: true})
     this.render();
   }
+  renderViewMore(onPress){
+    return(
+      <Text onPress={onPress} style={{ color:'#03bafc' }}>View more</Text>
+    )
+  }
+  renderViewLess(onPress){
+    return(
+      <Text onPress={onPress} style={{ color:'#03bafc' }}>View less</Text>
+    )
+  }
   componentDidMount = () => {
     this.setState({videoId:this.props.navigation.state.params.data.youtubeID})
     // console.log('http://Sh.tasmiasolutions.com/api/mobile/get_videos?category_id='+this.props.navigation.state.params.data.category_id+'&page_no='+this.state.page_no+'&items_per_page='+this.state.items_per_page)
@@ -43,7 +55,7 @@ class HomeScreen extends React.Component {
       // responseType: 'stream'
     })
       .then(({ data: response }) => {
-        console.log(response.data)
+        // console.log(response.data)
         this.setState({data:response.data,page_no:this.state.page_no==response.meta.total_pages?0:this.state.page_no+1})
     });
   }
@@ -100,10 +112,23 @@ return(
             </View>
             <View style={{ paddingLeft:10,marginTop:-10 }}>
               <Text style={{ color:'white',fontSize:22 }}>{this.props.navigation.state.params.data.title}</Text>
+              <View style={{ marginTop:20 }}>
+                    <ViewMoreText
+                      numberOfLines={1}
+                      renderViewMore={this.renderViewMore}
+                      renderViewLess={this.renderViewLess}
+                      // textStyle={{textAlign: 'center'}}
+                    >
+                    <Text style={{color:'white'}}>
+                        {this.props.navigation.state.params.data.description}
+                    </Text>
+                    </ViewMoreText>
+                </View>
                 {/* <Text style={{ color:'#4D4639',fontSize:16 }}>2.8M Views 3 Months Ago</Text> */}
             </View>
             <View style={{ marginHorizontal:10,marginVertical:10 }}>
                 <Line />
+                <Text style={{fontSize:22,color:'white',marginTop:15}}>Related Videos</Text>
             </View>
             </View>
 );
@@ -113,6 +138,7 @@ return(
         // <ScrollView ref={(ref) => { this.scrollListReftop = ref; }} style={styles.container}>
             
             <View style={styles.container}>
+                
                 <FlatList
                 nestedScrollEnabled 
                 showsVerticalScrollIndicator={false}

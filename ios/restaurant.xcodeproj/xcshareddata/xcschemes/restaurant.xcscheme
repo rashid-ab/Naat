@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "naat.app"
-               BlueprintName = "naat"
-               ReferencedContainer = "container:naat.xcodeproj">
+               BuildableName = "SHProductions.app"
+               BlueprintName = "SHProductions"
+               ReferencedContainer = "container:SHProductions.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "naatTests.xctest"
-               BlueprintName = "naatTests"
-               ReferencedContainer = "container:naat.xcodeproj">
+               BuildableName = "SHProductionsTests.xctest"
+               BlueprintName = "SHProductionsTests"
+               ReferencedContainer = "container:SHProductions.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "naat.app"
-            BlueprintName = "naat"
-            ReferencedContainer = "container:naat.xcodeproj">
+            BuildableName = "SHProductions.app"
+            BlueprintName = "SHProductions"
+            ReferencedContainer = "container:SHProductions.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "naat.app"
-            BlueprintName = "naat"
-            ReferencedContainer = "container:naat.xcodeproj">
+            BuildableName = "SHProductions.app"
+            BlueprintName = "SHProductions"
+            ReferencedContainer = "container:SHProductions.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

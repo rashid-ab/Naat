@@ -5,9 +5,6 @@ import {
   Text,
   View,
   Image,
-  Dimensions,
-  Platform,
-  ImageBackground,
   FlatList,
   TextInput
 } from "react-native";
@@ -17,7 +14,8 @@ import {
   AppStyles,
 } from "../AppStyles";
 import Line from '../components/Line';
-import {Icon} from 'react-native-elements'
+import {Icon} from 'react-native-elements';
+import url from '../components/url';
 class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -27,21 +25,14 @@ class HomeScreen extends React.Component {
       searchString:'',
       searching:false,
       data:[],
-      searchdata:[
-            {title:'Naaaaaat',data:[{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'}]},
-            {title:'Naat',data:[{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'}]},
-            {title:'Naat',data:[{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'}]},
-            {title:'Naat',data:[{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'}]},
-            {title:'Naat',data:[{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'}]},
-            {title:'Naat',data:[{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'},{image:'https://grlzradio.files.wordpress.com/2019/12/city-skyline-40-night.jpg',title:'Hedriem'}]}
-      ]
+      searchdata:[]
     };
   }
   componentDidMount = async() => {
     // await AsyncStorage.setItem({"url":"http://staging.shafiquesons.com/"})
     axios({
       method: 'get',
-      url: 'http://Sh.tasmiasolutions.com/api/mobile/get_all_categories',
+      url: url.Api_url+'get_all_categories',
       // responseType: 'stream'
     })
       .then(({ data: response }) => {
@@ -51,19 +42,8 @@ class HomeScreen extends React.Component {
   }
   _renderItem = ({item, index}) => {
     return (
-      // <View style={{ borderRadius:20 }}>
-      //   <TouchableOpacity >
-      //     <ImageBackground style={styles.itemContainer} source={{ uri:item.image }} style={{ width:150,height:150,marginRight:20,borderRadius:20,marginVertical:10 }}>
-      //       <View style={{ flex:.7,justifyContent:'center',alignItems:'center',paddingTop:38 }}>
-      //       </View>
-      //       <View style={{ flex:.3,justifyContent:'center',alignItems:'center',backgroundColor:'rgba(0,0,0,.6)' }}>
-      //         <Text style={{ fontSize:18,color:'white' }}>{ item.title }</Text>
-      //       </View>
-      //     </ImageBackground>
-      //   </TouchableOpacity>
-      // </View>
       <TouchableOpacity style={{ }} onPress={()=>{this.props.navigation.navigate('Item',{id:item.id})}}>
-          <Image source={{ uri:item.imageURL }} style={{ width:150,zIndex:0,height:150,marginRight:20,borderRadius:20,marginVertical:10 }}/>
+          <Image source={{ uri:url.Image_url+item.imageURL }} style={{ width:150,zIndex:0,height:150,marginRight:20,borderRadius:20,marginVertical:10,resizeMode:'cover' }}/>
           {/* <Text style={{ color:'white',fontSize:14,zIndex:1000,position:'absolute',bottom:20 }}>{item.title}</Text> */}
           <View style={{ justifyContent:'center',alignItems:'center',backgroundColor:'rgba(0,0,0,.6)',zIndex:1000,bottom:40,width:150,height:30,borderBottomLeftRadius:20,borderBottomRightRadius:20 }}>
             <Text style={{ fontSize:14,color:'white' }}>{ item.name }</Text>
@@ -75,7 +55,7 @@ class HomeScreen extends React.Component {
     return (
       <TouchableOpacity style={{ borderRadius:10,marginHorizontal:10 }} onPress={()=>{this.props.navigation.navigate('Player',{id:item.id})}}>
         <Image source={{ uri:item.imageURL }} style={{ width:100,height:100,borderRadius:10 }} />
-        <Text style={{ color:'white',fontSize:14 }}>{item.title}</Text>
+        <Text style={{ color:'white',fontSize:14 }}>{item.shortName}</Text>
       </TouchableOpacity>
     );
   }
@@ -86,7 +66,7 @@ class HomeScreen extends React.Component {
     if(text!=''){
     axios({
       method: 'get',
-      url: 'http://Sh.tasmiasolutions.com/api/mobile/search_videos/'+text,
+      url: url.Api_url+'search_videos/'+text,
       // responseType: 'stream'
     })
       .then(({ data: response }) => {

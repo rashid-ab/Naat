@@ -6,7 +6,6 @@ import {
   View,
   Image,
   Dimensions,
-  Platform,
   ImageBackground,
   FlatList,
   TextInput,
@@ -24,6 +23,7 @@ const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
 const ITEM_HEIGHT = Dimensions.get('window').width > Dimensions.get('window').height? Math.round(ITEM_WIDTH * 3 / 2):Math.round(ITEM_WIDTH * 3 / 4);
 import Line from '../components/Line';
+import url from '../components/url';
 import axios from 'axios';
 class HomeScreen extends React.Component {
   constructor(props) {
@@ -44,7 +44,7 @@ class HomeScreen extends React.Component {
     // await AsyncStorage.setItem({"url":"http://staging.shafiquesons.com/"})
     axios({
       method: 'get',
-      url: 'http://Sh.tasmiasolutions.com/api/mobile/get_recent_videos',
+      url: url.Api_url+'get_recent_videos',
       // responseType: 'stream'
     })
       .then(({ data: response }) => {
@@ -52,7 +52,7 @@ class HomeScreen extends React.Component {
     });
     axios({
       method: 'get',
-      url: 'http://Sh.tasmiasolutions.com/api/mobile/get_popular_catgeories',
+      url: url.Api_url+'get_popular_catgeories',
       // responseType: 'stream'
     })
       .then(({ data: response }) => {
@@ -60,16 +60,17 @@ class HomeScreen extends React.Component {
     });
     axios({
       method: 'get',
-      url: 'http://Sh.tasmiasolutions.com/api/mobile/get_popular_videos',
+      url: url.Api_url+'get_popular_videos',
       // responseType: 'stream'
     })
       .then(({ data: response }) => {
+        console.log(response)
         this.setState({popular_videos:response.data,visible:false})
     });
   }
   _renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Player',{data:{youtubeID:item.youtubeID,category_id:item.categoryID,title:item.title}})}}>
+      <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Player',{data:{youtubeID:item.youtubeID,category_id:item.categoryID,title:item.title,description:item.shortDescription}})}}>
         <ImageBackground style={styles.itemContainer} source={{ uri:item.imageURL }}>
           <View style={{ flex:.7,justifyContent:'center',alignItems:'center',paddingTop:38 }}>
               <Image source={require('../assets/play.png')} />
@@ -84,24 +85,24 @@ class HomeScreen extends React.Component {
   }
   popular_videos = ({item}) => {
       return (
-        <TouchableOpacity style={{ borderRadius:10,marginHorizontal:10 }} onPress={()=>{this.props.navigation.navigate('Player',{data:{youtubeID:item.youtubeID,category_id:item.categoryID,title:item.title}})}}>
-          <Image source={{ uri:item.imageURL }} style={{ width:100,height:100,borderRadius:10 }} />
-          <Text style={{ color:'white',fontSize:14 }}>{item.title}</Text>
+        <TouchableOpacity style={{ borderRadius:10,marginHorizontal:10 }} onPress={()=>{this.props.navigation.navigate('Player',{data:{youtubeID:item.youtubeID,category_id:item.categoryID,title:item.title,description:item.shortDescription}})}}>
+          <Image source={{ uri:item.imageURL }} style={{ width:100,height:100,borderRadius:10,resizeMode:'cover' }} />
+          <Text style={{ color:'white',fontSize:14,alignSelf:'center' }}>{item.shortName}</Text>
         </TouchableOpacity>
       );
   }
   popular_categories = ({item}) => {
     return (
       <TouchableOpacity style={{ borderRadius:10,marginHorizontal:10 }} onPress={()=>{this.props.navigation.navigate('Item',{id:item.id})}}>
-        <Image source={{ uri:item.imageURL }} style={{ width:100,height:100,borderRadius:10 }} />
-        <Text style={{ color:'white',fontSize:14 }}>{item.name}</Text>
+        <Image source={{ uri:url.Image_url+item.imageURL }} style={{ width:100,height:100,borderRadius:10,resizeMode:'cover' }} />
+        <Text style={{ color:'white',fontSize:14,alignSelf:'center' }}>{item.name}</Text>
       </TouchableOpacity>
     );
 }
   searched = (text) => {
     axios({
       method: 'get',
-      url: 'http://Sh.tasmiasolutions.com/api/mobile/search_videos/'+text,
+      url: url.Api_url+'search_videos/'+text,
       // responseType: 'stream'
     })
       .then(({ data: response }) => {
@@ -114,7 +115,6 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        
         {this.state.searching?
           <View style={{ flexDirection:'row',alignItems:'center',justifyContent:'flex-start',flex:1,backgroundColor:'black',height:120,paddingTop:20,paddingLeft:20 }}>
             <TouchableOpacity style={{ paddingHorizontal:10 }} onPress={()=>{this.setState({searching:!this.state.searching,searchString:''})}}>
@@ -265,6 +265,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     width: "100%",
     height: 200,
+    resizeMode:'contain',
     // alignItems: 'center',
     // justifyContent: 'center',
     backgroundColor: 'dodgerblue'

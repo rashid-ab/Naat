@@ -21,6 +21,7 @@ import {Icon} from 'react-native-elements'
 import { Configuration } from "../Configuration";
 import { scrollInterpolator, animatedStyles } from '../components/utils';
 import axios from 'axios';
+import url from "../components/url";
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
@@ -43,7 +44,7 @@ class HomeScreen extends React.Component {
     // await AsyncStorage.setItem({"url":"http://staging.shafiquesons.com/"})
    axios({
       method: 'get',
-      url: 'http://Sh.tasmiasolutions.com/api/mobile/get_recent_videos',
+      url: url.Api_url+'get_recent_videos',
       // responseType: 'stream'
     })
       .then(({ data: response }) => {
@@ -51,7 +52,7 @@ class HomeScreen extends React.Component {
     });
     axios({
       method: 'GET',
-      url: 'http://Sh.tasmiasolutions.com/api/mobile/get_videos?category_id='+this.props.navigation.state.params.id,
+      url: url.Api_url+'get_videos?category_id='+this.props.navigation.state.params.id,
       // responseType: 'stream'
     })
         .then(({ data: response }) => {
@@ -62,7 +63,7 @@ class HomeScreen extends React.Component {
     if(text!=''){
     axios({
       method: 'get',
-      url: 'http://Sh.tasmiasolutions.com/api/mobile/search_videos/'+text,
+      url: url.Api_url+'search_videos/'+text,
       // responseType: 'stream'
     })
       .then(({ data: response }) => {
@@ -105,8 +106,8 @@ class HomeScreen extends React.Component {
   search = ({item}) => {
     return (
       <TouchableOpacity style={{ borderRadius:10,marginHorizontal:10 }} onPress={()=>{this.props.navigation.navigate('Player',{id:item.id})}}>
-        <Image source={{ uri:item.image }} style={{ width:100,height:100,borderRadius:10 }} />
-        <Text style={{ color:'white',fontSize:14 }}>{item.title}</Text>
+        <Image source={{ uri:item.imageURL }} style={{ width:100,height:100,borderRadius:10 }} />
+        <Text style={{ color:'white',fontSize:14 }}>{item.shortName}</Text>
       </TouchableOpacity>
     );
   }
@@ -214,7 +215,7 @@ class HomeScreen extends React.Component {
               showsHorizontalScrollIndicator={false}
               horizontal={true}
               data={item.Tracks}
-              renderItem={(item) => this.popular_videos(item)}
+              renderItem={(item) => this.search(item)}
               keyExtractor={(item, index) => index}
             />
           </View>

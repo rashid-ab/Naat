@@ -1,4 +1,4 @@
-package com.naat; // Replace this with your package name
+package com.SHProductions; // Replace this with your package name
 
 import android.content.Intent;
 import android.os.Bundle;
